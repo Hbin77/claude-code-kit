@@ -1,0 +1,98 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "ENABLE_TOOL_SEARCH": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(bun *)",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(pip *)",
+      "Bash(go *)",
+      "Bash(cargo *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(gh *)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(curl *)",
+      "Bash(jq *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(echo *)",
+      "Bash(chmod *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(sort *)",
+      "Bash(date *)",
+      "Agent",
+      "NotebookEdit",
+      "WebSearch",
+      "WebFetch",
+      "TaskCreate",
+      "TaskUpdate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TeamCreate"
+    ],
+    "deny": [
+      "Bash(rm -rf /)*",
+      "Bash(rm -rf ~)*",
+      "Bash(*--force*main)*",
+      "Bash(*--force*master)*",
+      "Bash(npm publish)*",
+      "Bash(*DROP DATABASE*)*",
+      "Bash(*DROP TABLE*)*",
+      "Bash(eval *)*"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/remote-command-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/secret-filter.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/quality-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
