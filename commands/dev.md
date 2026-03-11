@@ -4,40 +4,48 @@ Task: $ARGUMENTS
 
 ## Pipeline
 
-### Phase 1: Understand
-1. Explore the project structure (key files, tech stack, patterns)
-2. Read relevant existing code that will be affected
+### Phase 1: Understand (PARALLEL)
+Launch these agents simultaneously using multiple Agent tool calls in a single message:
+- **Agent 1** (Explore): Scan project structure, tech stack, architecture patterns
+- **Agent 2** (Explore): Find and read files directly related to the task
+
+Wait for both to complete, then synthesize findings.
 
 ### Phase 2: Plan
-3. Create a brief implementation plan:
-   - What files to create/modify
-   - What approach to take
-   - Any risks or edge cases
+Based on Phase 1 results:
+1. Create a brief implementation plan (files to modify, approach, risks)
+2. If the task involves multiple independent components, identify which can be implemented in parallel
 
 ### Phase 3: Implement
-4. Implement the changes following existing code patterns
-5. Write minimal, focused code - no over-engineering
+- If multiple independent files/components identified in Phase 2:
+  Launch parallel agents with `isolation: "worktree"` for each independent component
+- If changes are interdependent:
+  Implement sequentially, starting with the foundation (types/interfaces → logic → UI)
 
-### Phase 4: Verify
-6. Run build (detect build system automatically)
-7. Run lint/type-check if available
-8. Run tests if available
-9. If any step fails, fix and re-verify automatically
+### Phase 4: Verify (PARALLEL)
+Launch these checks simultaneously in a single message:
+- `Bash`: Run build
+- `Bash`: Run lint/type-check
+- `Bash`: Run tests
 
-### Phase 5: Review
-10. Self-review all changes:
-    - Security: no hardcoded secrets, input validation
-    - Quality: no dead code, clear naming, error handling
-    - Performance: no obvious N+1 or memory leaks
-11. Fix any issues found during review
+If any fails, fix and re-verify automatically (up to 3 attempts).
+
+### Phase 5: Review (PARALLEL)
+Launch two review agents simultaneously:
+- **code-reviewer agent**: Quality, maintainability, performance check
+- **security-reviewer agent**: Security vulnerability scan
+
+Collect both results, fix any CRITICAL or WARNING findings.
 
 ### Phase 6: Finalize
-12. Summarize what was done:
-    - Files changed/created
-    - Key decisions made
-    - What to test manually (if applicable)
+Summarize:
+- Files changed/created
+- Key decisions made
+- Review findings addressed
+- What to test manually (if applicable)
 
 ## Rules
+- MAXIMIZE PARALLELISM: Always launch independent operations in a single message with multiple tool calls
 - Do NOT ask for permission between phases - just execute
 - If build/test fails, fix it automatically (up to 3 attempts)
 - If genuinely ambiguous (multiple valid approaches), ask once then proceed
