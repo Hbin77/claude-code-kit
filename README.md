@@ -10,8 +10,10 @@
 [![Skills](https://img.shields.io/badge/Skills-4-orange)]()
 [![Hooks](https://img.shields.io/badge/Hooks-3-red)]()
 [![Rules](https://img.shields.io/badge/Rules-2-yellow)]()
+[![Stitch MCP](https://img.shields.io/badge/Stitch_MCP-Design_Phase-ff69b4)]()
 
 **커맨드 없이도** 작업 규모에 따라 자동으로 팀 에이전트가 협업합니다.
+**UI 작업은** Stitch MCP로 디자인 → 코드 구현까지 자동 연결됩니다.
 
 </div>
 
@@ -20,14 +22,21 @@
 ## How It Works
 
 커맨드를 입력하지 않아도 Claude Code가 **자동으로 작업 규모를 판단**하고, 적절한 팀 플로우를 실행합니다.
+**UI 작업이 포함되면** Stitch MCP 디자인 단계가 자동 삽입됩니다.
 
 ```
-  "OAuth2 로그인 구현해줘"              "이 타입 에러 고쳐줘"
+  "대시보드 페이지 만들어줘"              "이 타입 에러 고쳐줘"
          │                                    │
     규모 판단: Large (5+ files)           규모 판단: Trivial
-         │                                    │
-         ▼                                    ▼
-  ┌─────────────┐                        바로 수정 + 검증
+    UI 포함: Yes                              │
+         │                                    ▼
+         ▼                               바로 수정 + 검증
+  ┌─────────────┐
+  │ Phase 0:    │  Stitch MCP
+  │ Design      │  UI 디자인 생성 → 사용자 확인 → 스펙 확정
+  └──────┬──────┘
+         │
+  ┌──────┴──────┐
   │  Team Lead  │
   │   (Opus)    │
   └──────┬──────┘
@@ -35,7 +44,7 @@
     ┌────┴────┐ Phase 1: 분석 (병렬)
     ▼         ▼
 ┌────────┐ ┌────────┐
-│architect│ │planner │
+│architect│ │planner │  ← 디자인 스펙 참조
 │구조 분석│ │계획 수립│
 └───┬────┘ └───┬────┘
     └────┬─────┘
@@ -43,7 +52,7 @@
     ┌────┴────┐ Phase 2: 구현 (병렬 worktree)
     ▼         ▼
 ┌────────┐ ┌────────┐
-│구현 A   │ │구현 B   │
+│구현 A   │ │구현 B   │  ← 디자인 스펙에 맞춰 UI 구현
 │(worktree)│(worktree)│
 └───┬────┘ └───┬────┘
     └────┬─────┘
@@ -70,11 +79,79 @@
 | 규모 | 기준 | 자동 동작 |
 |:-----|:-----|:---------|
 | **Trivial** | 1 file, < 20 lines | 바로 수정 + 검증 |
-| **Small** | 2-3 files | 직접 처리 + 검증 |
-| **Medium** | 3-5 files | planner → 구현 → code-reviewer |
-| **Large** | 5+ files | 전체 팀 플로우 (위 다이어그램) |
+| **Small** | 2-3 files | 직접 처리 + 검증 (UI 시 Stitch 목업 선택 가능) |
+| **Medium** | 3-5 files | **Design (if UI)** → planner → 구현 → code-reviewer |
+| **Large** | 5+ files | **Design (if UI)** → 전체 팀 플로우 (위 다이어그램) |
 
 > Rules(`workflow.md`)가 매 세션 자동 로드되어 별도 커맨드 없이 동작합니다.
+
+---
+
+## Stitch MCP Setup (Design Phase)
+
+UI/프론트엔드 작업 시 **Stitch MCP**를 통해 디자인 단계가 자동 실행됩니다.
+사용 전 1회 연결이 필요합니다.
+
+### 1. API 키 발급
+
+[stitch.withgoogle.com](https://stitch.withgoogle.com) 접속 → MCP 설정 페이지에서 API 키 복사
+
+### 2. MCP 연결
+
+```bash
+claude mcp add stitch \
+  --transport http \
+  --url "https://stitch.googleapis.com/mcp" \
+  --header "X-Goog-Api-Key: YOUR_API_KEY"
+```
+
+> `YOUR_API_KEY`를 발급받은 키로 교체하세요.
+
+### 3. 연결 확인
+
+```bash
+claude mcp list
+```
+
+`stitch` 서버가 목록에 보이면 완료입니다.
+
+### 미연결 시 동작
+
+Stitch MCP가 연결되지 않은 상태에서 UI 작업을 요청하면, 자동으로 아래 경고가 출력되고 작업이 중단됩니다:
+
+```
+⚠️ [Stitch MCP 미연결] 디자인 단계를 진행하려면 Stitch MCP 연결이 필요합니다.
+
+아래 명령어를 터미널에 입력하여 연결해주세요:
+
+  claude mcp add stitch \
+    --transport http \
+    --url "https://stitch.googleapis.com/mcp" \
+    --header "X-Goog-Api-Key: YOUR_API_KEY"
+
+API 키는 https://stitch.withgoogle.com 에서 발급받을 수 있습니다.
+연결 완료 후 다시 요청해주세요.
+```
+
+### Design → Code 워크플로우
+
+```
+Step 0: Stitch MCP 연결 확인
+   │
+   ├─ 미연결 → ⚠️ 경고 + 연결 안내 → 중단
+   │
+   └─ 연결됨 ↓
+Step 1: Design Generation (Stitch로 UI 생성)
+   ↓
+Step 2: Design Review (사용자 피드백 반영)
+   ↓
+Step 3: Design → Code Handoff
+         ├─ 컴포넌트 구조 추출
+         ├─ 디자인 토큰 정리 (색상, 간격, 타이포)
+         └─ planner / architect 에 컨텍스트 전달
+   ↓
+Planning → Implementation → Verify → Review
+```
 
 ---
 
@@ -89,6 +166,10 @@ cd claude-code-kit
 > Requires: `git`, `jq`, Claude Code CLI
 
 설치 후 바로 사용 가능합니다. 커맨드를 외울 필요 없이 그냥 작업을 요청하면 됩니다.
+
+### (선택) Stitch MCP 연결
+
+UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch-mcp-setup-design-phase) 섹션을 참고하세요.
 
 ---
 
@@ -215,13 +296,24 @@ cd claude-code-kit
 
 커맨드 없이 자동 적용되는 규칙입니다.
 
-### `workflow.md` — 작업 규모 자동 판단 + 팀 플로우
+### `workflow.md` — 작업 규모 자동 판단 + 디자인 + 팀 플로우
 
 ```
-사용자 요청 → 규모 분류 (Trivial/Small/Medium/Large) → 자동 팀 배정
-
-Large 작업 시:
-  architect + planner (병렬) → 구현 (worktree 병렬) → 검증 (병렬) → 리뷰 (병렬)
+사용자 요청 → 규모 분류 → UI 포함 여부 체크
+                              │
+                     ┌────────┴────────┐
+                     ▼                 ▼
+                UI 있음             UI 없음
+                     │                 │
+              Stitch MCP 체크     바로 Plan/구현
+                     │
+              ┌──────┴──────┐
+              ▼              ▼
+          연결됨          미연결
+              │              │
+        디자인 생성      ⚠️ 경고 + 중단
+              │
+        Plan → 구현 → 검증 → 리뷰
 ```
 
 ### `quality.md` — 코드 품질 기본 규칙
@@ -251,6 +343,7 @@ Large 작업 시:
 |:--------|:------|
 | Agent Teams | Enabled |
 | Tool Search | Enabled |
+| Stitch MCP | User-connected (API Key) |
 | Auto-allow | `git`, `npm`, `docker`, `gh`, `python`, `go`, `cargo`, and more |
 | Auto-deny | `rm -rf /`, force push to main/master, `npm publish`, `DROP DATABASE` |
 
@@ -286,7 +379,7 @@ claude-code-kit/
 │   ├── secret-filter.sh
 │   └── quality-reminder.sh
 ├── rules/                     # 2 auto-loaded rules
-│   ├── workflow.md            #   Auto team scaling by task size
+│   ├── workflow.md            #   Auto team scaling + Stitch design phase
 │   └── quality.md             #   Code quality standards
 ├── settings.json              # Permissions, hooks, env config
 ├── install.sh                 # One-click installer
@@ -299,6 +392,7 @@ claude-code-kit/
 
 | | Without Kit | With Kit (Solo) | With Kit (Team) |
 |:--|:-----------|:----------------|:----------------|
+| Design | None | Stitch mockup (optional) | Stitch → auto spec handoff |
 | Workflow | Manual | `/dev`, `/ship` | Auto or `/team-dev` |
 | Planning | None | Self-planning | architect + planner agents |
 | Review | None | Self-review | code-reviewer + security-reviewer |
@@ -316,8 +410,8 @@ claude-code-kit/
 
 <div align="center">
 
-**Built with Claude Code**
+**Built with Claude Code + Stitch MCP**
 
-*Just tell Claude what to build. The team handles the rest.*
+*Design first, then code. The team handles the rest.*
 
 </div>
