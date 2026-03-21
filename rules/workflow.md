@@ -21,7 +21,7 @@ Before starting, classify the task:
 ### Step 0: Stitch MCP 연결 확인 (필수)
 - 디자인 단계 진입 시, Stitch MCP 연결 여부를 먼저 확인한다.
 - `claude mcp list` 또는 MCP 도구 목록에서 `stitch` 서버가 있는지 체크한다.
-- **연결되어 있지 않으면 즉시 아래 경고를 출력하고 작업을 중단한다:**
+- **연결되어 있지 않으면 즉시 아래 경고를 출력한다:**
 
 ```
 ⚠️ [Stitch MCP 미연결] 디자인 단계를 진행하려면 Stitch MCP 연결이 필요합니다.
@@ -34,10 +34,12 @@ Before starting, classify the task:
     --header "X-Goog-Api-Key: YOUR_API_KEY"
 
 API 키는 https://stitch.withgoogle.com 에서 발급받을 수 있습니다.
-연결 완료 후 다시 요청해주세요.
 ```
 
-- 사용자가 연결을 완료한 후에만 Step 1로 진행한다.
+- **Fallback**: 사용자에게 두 가지 선택지를 제시한다:
+  1. Stitch MCP를 연결하고 디자인 단계부터 진행
+  2. 디자인 단계를 건너뛰고 바로 Plan/구현 단계로 진행 (사용자의 구두 설명 기반)
+- 사용자가 선택한 경로에 따라 진행한다.
 
 ### Step 1: Design Generation
 - Stitch MCP를 사용해 사용자의 요구사항을 UI 디자인으로 생성
@@ -106,7 +108,7 @@ Just do it. Run build/test after. No ceremony needed.
 3. **Implement**: Write code following the plan + design specs
 4. **Verify**: Run build + lint + test
 5. **Review**: Spawn `code-reviewer` agent to check your work
-6. Fix any CRITICAL/WARNING findings
+6. Fix any CRITICAL/WARNING findings, then re-verify
 
 ## Large Tasks (5+ files)
 
@@ -142,3 +144,4 @@ Address CRITICAL/WARNING findings, then re-verify.
 - **Review large changes**: Spawn reviewer agent(s) for 5+ file changes
 - **Track complex work**: Use TaskCreate/TaskUpdate for large tasks
 - **Use worktree isolation**: When parallel agents modify different files
+- **Use design tokens**: When Stitch design specs exist, never hardcode colors/spacing — use token variables

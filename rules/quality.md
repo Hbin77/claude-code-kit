@@ -10,6 +10,7 @@
 - No over-engineering: don't add features that weren't asked for
 - No dead code: don't leave commented-out code or unused imports
 - Security first: validate inputs, no hardcoded secrets, parameterized queries
+- Use design tokens: when Stitch-generated design specs exist, use token variables (no hardcoded colors/spacing)
 
 ## After Writing Code
 - Run build to verify no errors

@@ -130,7 +130,6 @@ Stitch MCP가 연결되지 않은 상태에서 UI 작업을 요청하면, 자동
     --header "X-Goog-Api-Key: YOUR_API_KEY"
 
 API 키는 https://stitch.withgoogle.com 에서 발급받을 수 있습니다.
-연결 완료 후 다시 요청해주세요.
 ```
 
 ### Design → Code 워크플로우
@@ -138,17 +137,24 @@ API 키는 https://stitch.withgoogle.com 에서 발급받을 수 있습니다.
 ```
 Step 0: Stitch MCP 연결 확인
    │
-   ├─ 미연결 → ⚠️ 경고 + 연결 안내 → 중단
+   ├─ 미연결 → ⚠️ 경고 출력
+   │              ├─ [1] 연결 후 재시도
+   │              └─ [2] 디자인 건너뛰고 바로 구현 (fallback)
    │
    └─ 연결됨 ↓
 Step 1: Design Generation (Stitch로 UI 생성)
    ↓
-Step 2: Design Review (사용자 피드백 반영)
+Step 2: Color System Extraction
+         ├─ Primary / Secondary / Neutral / Semantic / Surface 분류
+         ├─ CSS 변수 또는 Tailwind config 형식으로 정리
+         └─ WCAG AA 대비율(4.5:1) 체크
    ↓
-Step 3: Design → Code Handoff
-         ├─ 컴포넌트 구조 추출
-         ├─ 디자인 토큰 정리 (색상, 간격, 타이포)
-         └─ planner / architect 에 컨텍스트 전달
+Step 3: Design Review & Iteration (사용자 피드백 반영)
+   ↓
+Step 4: Design → Code Handoff
+         ├─ 컴포넌트 트리 + props 인터페이스 초안
+         ├─ 디자인 토큰 파일 (색상, 타이포, 간격, 브레이크포인트)
+         └─ 구현 가이드 → planner / architect 에 컨텍스트 전달
    ↓
 Planning → Implementation → Verify → Review
 ```
