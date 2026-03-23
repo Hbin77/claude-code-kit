@@ -25,7 +25,7 @@ if [ -d "$CLAUDE_DIR" ]; then
   BACKUP_DIR="$CLAUDE_DIR/backups/pre-kit-$(date +%Y%m%d-%H%M%S)"
   echo "[1/5] Backing up existing config to $BACKUP_DIR"
   mkdir -p "$BACKUP_DIR"
-  for dir in agents commands hooks; do
+  for dir in agents commands hooks rules; do
     if [ -d "$CLAUDE_DIR/$dir" ] || [ -L "$CLAUDE_DIR/$dir" ]; then
       cp -rL "$CLAUDE_DIR/$dir" "$BACKUP_DIR/" 2>/dev/null || true
     fi
@@ -36,8 +36,8 @@ else
 fi
 
 # Remove existing symlinks or directories
-echo "[2/5] Preparing directories..."
-for dir in agents commands hooks; do
+echo "[2/6] Preparing directories..."
+for dir in agents commands hooks rules; do
   if [ -L "$CLAUDE_DIR/$dir" ]; then
     rm "$CLAUDE_DIR/$dir"
   elif [ -d "$CLAUDE_DIR/$dir" ]; then
@@ -47,8 +47,8 @@ for dir in agents commands hooks; do
 done
 
 # Create symlinks (or copy on WSL/Windows filesystem)
-echo "[3/5] Installing components..."
-for dir in agents commands hooks; do
+echo "[3/6] Installing components..."
+for dir in agents commands hooks rules; do
   if [ -d "$CLAUDE_DIR/$dir" ]; then
     # Directory exists - copy files into it
     cp -r "$SCRIPT_DIR/$dir/"* "$CLAUDE_DIR/$dir/" 2>/dev/null || true
@@ -61,7 +61,7 @@ for dir in agents commands hooks; do
 done
 
 # Merge settings (don't overwrite existing)
-echo "[4/5] Configuring settings..."
+echo "[4/6] Configuring settings..."
 if [ -f "$CLAUDE_DIR/settings.json" ]; then
   echo "  settings.json exists - merging hooks and permissions..."
   # Merge using jq: keep existing settings, add new hooks/permissions
@@ -74,7 +74,7 @@ else
 fi
 
 # Make hooks executable
-echo "[5/5] Setting permissions..."
+echo "[5/6] Setting permissions..."
 chmod +x "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null || true
 echo "  ✓ Hooks are executable"
 
@@ -94,5 +94,13 @@ echo "  /dev <task>     Full auto development pipeline"
 echo "  /ship <task>    Implement + commit + PR"
 echo "  /explore        Analyze project structure"
 echo "  /plan <feature> Create implementation plan"
+echo ""
+echo "[6/6] Stitch MCP (optional - for UI design phase)..."
+echo "  To enable AI design workflow, run:"
+echo "    claude mcp add stitch \\"
+echo "      --transport http \\"
+echo "      --url \"https://stitch.googleapis.com/mcp\" \\"
+echo "      --header \"X-Goog-Api-Key: YOUR_API_KEY\""
+echo "  Get your API key at: https://stitch.withgoogle.com"
 echo ""
 echo "All commands: ls ~/.claude/commands/"
