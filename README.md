@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agents](https://img.shields.io/badge/Agents-10-blueviolet)]()
-[![Commands](https://img.shields.io/badge/Commands-21-green)]()
+[![Commands](https://img.shields.io/badge/Commands-22-green)]()
 [![Skills](https://img.shields.io/badge/Skills-5-orange)]()
 [![Hooks](https://img.shields.io/badge/Hooks-3-red)]()
 [![Rules](https://img.shields.io/badge/Rules-2-yellow)]()
@@ -256,6 +256,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | `/build-fix` | Auto-fix build errors |
 | `/tdd <feature>` | Test-driven development |
 | `/explore` | Analyze project architecture |
+| `/design-setup` | Stitch MCP connection guide + design workflow setup |
 
 </details>
 
@@ -373,7 +374,7 @@ claude-code-kit/
 │   ├── doc-updater.md         #   Doc sync (Sonnet)
 │   ├── refactor-cleaner.md    #   Dead code removal (Sonnet)
 │   └── refactor-analyst.md    #   Code smell analysis (Opus)
-├── commands/                  # 21 slash commands + 5 skills
+├── commands/                  # 22 slash commands + 5 skills
 │   ├── team-dev.md            #   /team-dev  (team pipeline)
 │   ├── team-ship.md           #   /team-ship (team + PR)
 │   ├── team-review.md         #   /team-review (3-agent review)

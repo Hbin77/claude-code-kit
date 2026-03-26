@@ -1,5 +1,8 @@
 Autonomously complete the given task with full verification: $ARGUMENTS
 
+> **When to use**: Simple to medium tasks where you want fast, direct execution without agent delegation.
+> For complex multi-file tasks with parallel agents, use `/dev` instead.
+
 ## Steps
 
 1. Analyze the task and create a mental plan

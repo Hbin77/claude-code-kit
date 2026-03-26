@@ -2,12 +2,15 @@ You are executing a full development pipeline. Follow every step in order automa
 
 Task: $ARGUMENTS
 
+> **When to use**: Complex multi-file tasks requiring parallel agents (architect + reviewers).
+> For simple tasks without agent delegation, use `/auto` instead.
+
 ## Pipeline
 
 ### Phase 1: Understand (PARALLEL)
 Launch these agents simultaneously using multiple Agent tool calls in a single message:
-- **Agent 1** (Explore): Scan project structure, tech stack, architecture patterns
-- **Agent 2** (Explore): Find and read files directly related to the task
+- **Agent 1** (`architect` agent): Scan project structure, tech stack, architecture patterns
+- **Agent 2** (Explore subagent): Find and read files directly related to the task
 
 Wait for both to complete, then synthesize findings.
 

@@ -10,6 +10,16 @@ if [ -z "$FILE" ]; then
   exit 0
 fi
 
+# Debounce: suppress if reminded within last 30 seconds
+DEBOUNCE_FILE="/tmp/.claude-quality-reminder-last"
+if [ -f "$DEBOUNCE_FILE" ]; then
+  LAST=$(cat "$DEBOUNCE_FILE")
+  NOW=$(date +%s)
+  if [ $((NOW - LAST)) -lt 30 ]; then
+    exit 0
+  fi
+fi
+
 # Check if it's a source code file
 if echo "$FILE" | grep -qE '\.(ts|tsx|js|jsx|py|go|rs|java|rb)$'; then
   EXT="${FILE##*.}"
@@ -33,4 +43,5 @@ if echo "$FILE" | grep -qE '\.(ts|tsx|js|jsx|py|go|rs|java|rb)$'; then
       echo "Reminder: Consider running rubocop after changes."
       ;;
   esac
+  date +%s > "$DEBOUNCE_FILE"
 fi

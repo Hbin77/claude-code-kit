@@ -6,8 +6,8 @@ Task: $ARGUMENTS
 
 ### Phase 1: Understand (PARALLEL)
 Launch simultaneously in a single message:
-- **Agent 1** (Explore): Scan project structure, tech stack, patterns
-- **Agent 2** (Explore): Find and read files related to the task
+- **Agent 1** (`architect` agent): Scan project structure, tech stack, patterns
+- **Agent 2** (Explore subagent): Find and read files related to the task
 
 ### Phase 2: Plan
 Create implementation plan. Identify independent vs dependent components.

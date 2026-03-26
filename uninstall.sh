@@ -93,11 +93,22 @@ for dir in agents commands hooks rules; do
   fi
 done
 
+# Restore settings.json from backup if available
+if [ -n "$LATEST_BACKUP" ] && [ -f "$LATEST_BACKUP/settings.json" ]; then
+  read -p "Restore settings.json from backup? (y/N) " -n 1 -r
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    cp "$LATEST_BACKUP/settings.json" "$CLAUDE_DIR/settings.json"
+    echo "  ✓ settings.json restored from backup"
+  else
+    echo "  settings.json left as-is (manually edit if needed)"
+  fi
+else
+  echo "Note: settings.json was not reverted (no backup found)."
+  echo "  To reset, manually edit ~/.claude/settings.json"
+fi
+
 echo ""
 echo "============================================"
 echo "  Uninstall Complete!"
 echo "============================================"
-echo ""
-echo "Note: settings.json was NOT modified."
-echo "  To fully reset, manually edit ~/.claude/settings.json"
-echo "  or restore from backup."
