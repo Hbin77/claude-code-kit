@@ -321,7 +321,9 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
               ▼              ▼
           연결됨          미연결
               │              │
-        디자인 생성      ⚠️ 경고 + 중단
+        디자인 생성      ⚠️ 경고 + fallback 선택
+              │              ├─ [1] 연결 후 재시도
+              │              └─ [2] 건너뛰고 바로 구현
               │
         Plan → 구현 → 검증 → 리뷰
 ```
@@ -342,7 +344,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | Hook | Trigger | What it does |
 |:-----|:--------|:-------------|
 | **Command Guard** | `PreToolUse(Bash)` | Blocks `rm -rf /`, force push to main, `DROP TABLE`, pipe-to-shell |
-| **Secret Filter** | `PostToolUse(*)` | Warns when API keys, tokens, or passwords appear in output |
+| **Secret Filter** | `PostToolUse(Bash)` | Warns when API keys, tokens, or passwords appear in Bash output |
 | **Quality Reminder** | `PostToolUse(Edit\|Write)` | Reminds to run lint/typecheck after code changes |
 
 ---
@@ -380,8 +382,9 @@ claude-code-kit/
 │   ├── team-review.md         #   /team-review (3-agent review)
 │   ├── dev.md                 #   /dev  (solo pipeline)
 │   ├── ship.md                #   /ship (solo + PR)
-│   ├── ...
+│   ├── design-setup.md        #   /design-setup (Stitch MCP guide)
 │   ├── refactor.md            #   /refactor (full refactoring pipeline)
+│   ├── ...
 │   ├── code-smells/           # skill: code smell detection
 │   ├── debugging-strategies/  # skill
 │   ├── dependency-upgrade/    # skill
