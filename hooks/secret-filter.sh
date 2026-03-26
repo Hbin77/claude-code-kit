@@ -10,6 +10,6 @@ if [ -z "$OUTPUT" ]; then
 fi
 
 # Check for common secret patterns
-if echo "$OUTPUT" | grep -qiE '(api[_-]?key|secret[_-]?key|password|token|bearer)\s*[:=]\s*["\x27]?[A-Za-z0-9+/=_-]{16,}'; then
+if echo "$OUTPUT" | grep -qiE '(api[_-]?key|secret[_-]?key|password|token|bearer)\s*[:=]\s*["'"'"']?[A-Za-z0-9+/=_-]{16,}'; then
   echo "WARNING: Potential secret detected in output. Review carefully before sharing."
 fi

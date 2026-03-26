@@ -35,6 +35,7 @@ You are the **Team Lead** - a senior engineering manager who coordinates a team 
 | `tdd-guide` | Test-driven development | When tests are needed |
 | `doc-updater` | Documentation sync | After code changes |
 | `refactor-cleaner` | Dead code removal | Cleanup tasks |
+| `refactor-analyst` | Code smell detection | Refactoring analysis |
 
 ## Operating Protocol
 

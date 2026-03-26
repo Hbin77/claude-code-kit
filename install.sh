@@ -23,7 +23,7 @@ done
 # Backup existing config
 if [ -d "$CLAUDE_DIR" ]; then
   BACKUP_DIR="$CLAUDE_DIR/backups/pre-kit-$(date +%Y%m%d-%H%M%S)"
-  echo "[1/5] Backing up existing config to $BACKUP_DIR"
+  echo "[1/6] Backing up existing config to $BACKUP_DIR"
   mkdir -p "$BACKUP_DIR"
   for dir in agents commands hooks rules; do
     if [ -d "$CLAUDE_DIR/$dir" ] || [ -L "$CLAUDE_DIR/$dir" ]; then
@@ -31,7 +31,7 @@ if [ -d "$CLAUDE_DIR" ]; then
     fi
   done
 else
-  echo "[1/5] Creating ~/.claude/"
+  echo "[1/6] Creating ~/.claude/"
   mkdir -p "$CLAUDE_DIR"
 fi
 
@@ -64,8 +64,28 @@ done
 echo "[4/6] Configuring settings..."
 if [ -f "$CLAUDE_DIR/settings.json" ]; then
   echo "  settings.json exists - merging hooks and permissions..."
-  # Merge using jq: keep existing settings, add new hooks/permissions
-  MERGED=$(jq -s '.[0] * .[1]' "$CLAUDE_DIR/settings.json" "$SCRIPT_DIR/settings.json")
+  # Deep merge: concatenate + deduplicate arrays, recursive merge objects
+  MERGED=$(jq -s '
+    def deep_merge(a; b):
+      a as $a | b as $b |
+      if ($a | type) == "object" and ($b | type) == "object" then
+        ($a | keys) + ($b | keys) | unique | map(
+          . as $k |
+          if ($a | has($k)) and ($b | has($k)) then
+            { ($k): deep_merge($a[$k]; $b[$k]) }
+          elif ($b | has($k)) then
+            { ($k): $b[$k] }
+          else
+            { ($k): $a[$k] }
+          end
+        ) | add // {}
+      elif ($a | type) == "array" and ($b | type) == "array" then
+        ($a + $b) | unique
+      else
+        $b
+      end;
+    deep_merge(.[0]; .[1])
+  ' "$CLAUDE_DIR/settings.json" "$SCRIPT_DIR/settings.json")
   echo "$MERGED" > "$CLAUDE_DIR/settings.json"
   echo "  ✓ Settings merged"
 else

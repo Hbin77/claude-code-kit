@@ -362,7 +362,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 
 ```
 claude-code-kit/
-├── agents/                    # 9 specialized agent definitions
+├── agents/                    # 10 specialized agent definitions
 │   ├── team-lead.md           #   Team coordinator (Opus)
 │   ├── architect.md           #   Architecture analysis (Opus)
 │   ├── planner.md             #   Implementation planning (Opus)

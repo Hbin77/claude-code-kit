@@ -12,8 +12,9 @@ fi
 
 # Dangerous patterns
 BLOCKED_PATTERNS=(
-  "rm -rf /"
-  "rm -rf ~"
+  "rm -rf /$"
+  "rm -r -f /$"
+  "rm -rf ~$"
   "rm -rf \*"
   ":(){ :|:& };:"
   "mkfs\."
@@ -24,19 +25,22 @@ BLOCKED_PATTERNS=(
   "curl .+\| *sh -"
   "wget .+\| *bash"
   "wget .+\| *sh -"
-  "git push.*--force.*main"
-  "git push.*--force.*master"
+  "git push.*(-f|--force).*main"
+  "git push.*(-f|--force).*master"
   "git reset --hard.*origin"
   "npm publish"
   "DROP DATABASE"
+  "drop database"
   "DROP TABLE"
+  "drop table"
   "TRUNCATE"
   "DELETE FROM.*WHERE 1"
+  "^eval "
   "eval("
 )
 
 for pattern in "${BLOCKED_PATTERNS[@]}"; do
-  if echo "$COMMAND" | grep -qiE "$pattern"; then
+  if printf '%s\n' "$COMMAND" | grep -qiE "$pattern"; then
     echo "{\"decision\":\"block\",\"reason\":\"Blocked dangerous command matching pattern: $pattern\"}"
     exit 0
   fi

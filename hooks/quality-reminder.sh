@@ -23,5 +23,14 @@ if echo "$FILE" | grep -qE '\.(ts|tsx|js|jsx|py|go|rs|java|rb)$'; then
     go)
       echo "Reminder: Consider running go vet/golint after changes."
       ;;
+    rs)
+      echo "Reminder: Consider running cargo check/clippy after changes."
+      ;;
+    java)
+      echo "Reminder: Consider running build/checkstyle after changes."
+      ;;
+    rb)
+      echo "Reminder: Consider running rubocop after changes."
+      ;;
   esac
 fi
