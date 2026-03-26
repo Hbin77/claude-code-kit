@@ -5,9 +5,9 @@
 ### Upgrade your Claude Code into a full-stack development platform.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Agents](https://img.shields.io/badge/Agents-10-blueviolet)]()
-[![Commands](https://img.shields.io/badge/Commands-22-green)]()
-[![Skills](https://img.shields.io/badge/Skills-5-orange)]()
+[![Agents](https://img.shields.io/badge/Agents-11-blueviolet)]()
+[![Commands](https://img.shields.io/badge/Commands-26-green)]()
+[![Skills](https://img.shields.io/badge/Skills-6-orange)]()
 [![Hooks](https://img.shields.io/badge/Hooks-3-red)]()
 [![Rules](https://img.shields.io/badge/Rules-2-yellow)]()
 [![Stitch MCP](https://img.shields.io/badge/Stitch_MCP-Design_Phase-ff69b4)]()
@@ -183,7 +183,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 
 <div align="center">
 
-### 10개의 전문 에이전트가 하나의 팀으로 작동합니다.
+### 11개의 전문 에이전트가 하나의 팀으로 작동합니다.
 
 </div>
 
@@ -202,11 +202,11 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
                                 └──────┘
            ┌───────┬───────┐
            ▼       ▼       ▼
-      ┌────────┐┌──────┐┌────────┐┌────────┐
-      │tdd-    ││doc-  ││refactor││refactor│
-      │guide   ││update││-cleaner││-analyst│
-      │ Sonnet ││Sonnet││ Sonnet ││  Opus  │
-      └────────┘└──────┘└────────┘└────────┘
+      ┌────────┐┌──────┐┌────────┐┌────────┐┌────────┐
+      │tdd-    ││doc-  ││refactor││refactor││qa-     │
+      │guide   ││update││-cleaner││-analyst││tester  │
+      │ Sonnet ││Sonnet││ Sonnet ││  Opus  ││ Sonnet │
+      └────────┘└──────┘└────────┘└────────┘└────────┘
 ```
 
 | Agent | Model | Role |
@@ -221,6 +221,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | `doc-updater` | Sonnet | Documentation sync with code changes |
 | `refactor-cleaner` | Sonnet | Dead code detection & removal |
 | `refactor-analyst` | **Opus** | Code smell detection & refactoring analysis |
+| `qa-tester` | Sonnet | Browser QA testing & accessibility audit (Playwright) |
 
 > **Opus** = deep analysis & judgment. **Sonnet** = fast execution.
 
@@ -257,6 +258,19 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | `/tdd <feature>` | Test-driven development |
 | `/explore` | Analyze project architecture |
 | `/design-setup` | Stitch MCP connection guide + design workflow setup |
+| `/browse <url>` | Headless browser screenshot + console error check |
+| `/investigate <issue>` | Structured root cause analysis (5 Whys + reproduction) |
+| `/guard [scope]` | Safety guard mode (edit scope restriction + destructive op warnings) |
+
+</details>
+
+<details>
+<summary><b>QA</b> — 테스트 & 품질 보증</summary>
+
+| Command | Description |
+|:--------|:------------|
+| `/qa <url>` | Full QA pipeline (browser test + accessibility audit + user flow) |
+| `/retro` | Sprint/session retrospective (Keep/Stop/Start + action items) |
 
 </details>
 
@@ -365,7 +379,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 
 ```
 claude-code-kit/
-├── agents/                    # 10 specialized agent definitions
+├── agents/                    # 11 specialized agent definitions
 │   ├── team-lead.md           #   Team coordinator (Opus)
 │   ├── architect.md           #   Architecture analysis (Opus)
 │   ├── planner.md             #   Implementation planning (Opus)
@@ -375,8 +389,9 @@ claude-code-kit/
 │   ├── tdd-guide.md           #   TDD guide (Sonnet)
 │   ├── doc-updater.md         #   Doc sync (Sonnet)
 │   ├── refactor-cleaner.md    #   Dead code removal (Sonnet)
-│   └── refactor-analyst.md    #   Code smell analysis (Opus)
-├── commands/                  # 22 slash commands + 5 skills
+│   ├── refactor-analyst.md    #   Code smell analysis (Opus)
+│   └── qa-tester.md           #   Browser QA testing (Sonnet)
+├── commands/                  # 26 slash commands + 6 skills
 │   ├── team-dev.md            #   /team-dev  (team pipeline)
 │   ├── team-ship.md           #   /team-ship (team + PR)
 │   ├── team-review.md         #   /team-review (3-agent review)
@@ -384,7 +399,12 @@ claude-code-kit/
 │   ├── ship.md                #   /ship (solo + PR)
 │   ├── design-setup.md        #   /design-setup (Stitch MCP guide)
 │   ├── refactor.md            #   /refactor (full refactoring pipeline)
+│   ├── qa.md                  #   /qa (browser QA pipeline)
+│   ├── investigate.md         #   /investigate (root cause analysis)
+│   ├── browse.md              #   /browse (headless browser screenshots)
+│   ├── guard.md               #   /guard (safety guard mode)
 │   ├── ...
+│   ├── retro/                 # skill: sprint retrospective
 │   ├── code-smells/           # skill: code smell detection
 │   ├── debugging-strategies/  # skill
 │   ├── dependency-upgrade/    # skill

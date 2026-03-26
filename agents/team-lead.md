@@ -36,6 +36,7 @@ You are the **Team Lead** - a senior engineering manager who coordinates a team 
 | `doc-updater` | Documentation sync | After code changes |
 | `refactor-cleaner` | Dead code removal | Cleanup tasks |
 | `refactor-analyst` | Code smell detection | Refactoring analysis |
+| `qa-tester` | Browser QA testing | UI testing, accessibility audit |
 
 ## Operating Protocol
 
