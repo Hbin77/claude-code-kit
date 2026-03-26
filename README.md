@@ -5,9 +5,9 @@
 ### Upgrade your Claude Code into a full-stack development platform.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Agents](https://img.shields.io/badge/Agents-9-blueviolet)]()
-[![Commands](https://img.shields.io/badge/Commands-20-green)]()
-[![Skills](https://img.shields.io/badge/Skills-4-orange)]()
+[![Agents](https://img.shields.io/badge/Agents-10-blueviolet)]()
+[![Commands](https://img.shields.io/badge/Commands-21-green)]()
+[![Skills](https://img.shields.io/badge/Skills-5-orange)]()
 [![Hooks](https://img.shields.io/badge/Hooks-3-red)]()
 [![Rules](https://img.shields.io/badge/Rules-2-yellow)]()
 [![Stitch MCP](https://img.shields.io/badge/Stitch_MCP-Design_Phase-ff69b4)]()
@@ -183,7 +183,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 
 <div align="center">
 
-### 9개의 전문 에이전트가 하나의 팀으로 작동합니다.
+### 10개의 전문 에이전트가 하나의 팀으로 작동합니다.
 
 </div>
 
@@ -202,11 +202,11 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
                                 └──────┘
            ┌───────┬───────┐
            ▼       ▼       ▼
-      ┌────────┐┌──────┐┌────────┐
-      │tdd-    ││doc-  ││refactor│
-      │guide   ││update││-cleaner│
-      │ Sonnet ││Sonnet││ Sonnet │
-      └────────┘└──────┘└────────┘
+      ┌────────┐┌──────┐┌────────┐┌────────┐
+      │tdd-    ││doc-  ││refactor││refactor│
+      │guide   ││update││-cleaner││-analyst│
+      │ Sonnet ││Sonnet││ Sonnet ││  Opus  │
+      └────────┘└──────┘└────────┘└────────┘
 ```
 
 | Agent | Model | Role |
@@ -220,6 +220,7 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | `tdd-guide` | Sonnet | Red-Green-Refactor TDD cycle |
 | `doc-updater` | Sonnet | Documentation sync with code changes |
 | `refactor-cleaner` | Sonnet | Dead code detection & removal |
+| `refactor-analyst` | **Opus** | Code smell detection & refactoring analysis |
 
 > **Opus** = deep analysis & judgment. **Sonnet** = fast execution.
 
@@ -268,6 +269,8 @@ UI 작업을 위해 Stitch MCP를 연결하려면 위 [Stitch MCP Setup](#stitch
 | `/verify` | Run build + lint + test |
 | `/test-coverage` | Analyze and improve test coverage |
 | `/refactor-clean` | Remove dead code and unused dependencies |
+| `/refactor <scope>` | Full refactoring pipeline (analyze → plan → execute → verify → review) |
+| `/code-smells [path]` | Code smell detection & analysis report (read-only) |
 
 </details>
 
@@ -368,14 +371,17 @@ claude-code-kit/
 │   ├── build-fixer.md         #   Build error fix (Sonnet)
 │   ├── tdd-guide.md           #   TDD guide (Sonnet)
 │   ├── doc-updater.md         #   Doc sync (Sonnet)
-│   └── refactor-cleaner.md    #   Dead code removal (Sonnet)
-├── commands/                  # 20 slash commands + 4 skills
+│   ├── refactor-cleaner.md    #   Dead code removal (Sonnet)
+│   └── refactor-analyst.md    #   Code smell analysis (Opus)
+├── commands/                  # 21 slash commands + 5 skills
 │   ├── team-dev.md            #   /team-dev  (team pipeline)
 │   ├── team-ship.md           #   /team-ship (team + PR)
 │   ├── team-review.md         #   /team-review (3-agent review)
 │   ├── dev.md                 #   /dev  (solo pipeline)
 │   ├── ship.md                #   /ship (solo + PR)
 │   ├── ...
+│   ├── refactor.md            #   /refactor (full refactoring pipeline)
+│   ├── code-smells/           # skill: code smell detection
 │   ├── debugging-strategies/  # skill
 │   ├── dependency-upgrade/    # skill
 │   ├── extract-errors/        # skill
@@ -389,6 +395,7 @@ claude-code-kit/
 │   └── quality.md             #   Code quality standards
 ├── settings.json              # Permissions, hooks, env config
 ├── install.sh                 # One-click installer
+├── uninstall.sh               # Clean removal
 └── README.md
 ```
 
