@@ -27,11 +27,17 @@ Spawn `code-reviewer` + `security-reviewer` simultaneously.
 Address CRITICAL/WARNING findings.
 
 ### Phase 6: Ship
-1. Stage relevant files (exclude .env, secrets, binaries)
-2. Create commit: `type(scope): description`
-3. Create new branch if on main/master (name from task)
+1. **Check current branch**:
+   - Ensure `develop` exists locally: `git fetch origin develop:develop 2>/dev/null || true`
+   - If on `main` or `develop`: create a feature branch (`feat/<task-name>` or `fix/<task-name>`) from `develop`
+   - If on `feat/*`, `fix/*`, `hotfix/*`: stay on current branch
+2. Stage relevant files (exclude .env, secrets, binaries)
+3. Create commit: `type(scope): description`
 4. Push to remote with `-u`
-5. Create PR via `gh pr create`:
+5. Determine PR target:
+   - `hotfix/*` branch → `--base main` (remind to also create PR to `develop`)
+   - All other branches → `--base develop`
+6. Create PR via `gh pr create --base <target>`:
    - Title: concise (<70 chars)
    - Body: team execution summary + review results + test plan
 

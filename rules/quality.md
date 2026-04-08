@@ -21,4 +21,6 @@
 - Skip verification after changes
 - Add `as any` or `// @ts-ignore` to fix type errors
 - Commit .env files or secrets
-- Force push to main/master
+- Force push to main/master/develop
+- Push directly to main (use PR from develop or hotfix branch)
+- Commit directly on main or develop without a feature branch (warn user first)
